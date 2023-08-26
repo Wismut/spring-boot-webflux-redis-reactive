@@ -1,7 +1,7 @@
 package com.max.reactivedockercompose.configuration;
 
-import com.max.reactivedockercompose.book.Book;
 import com.max.reactivedockercompose.company.Company;
+import com.max.reactivedockercompose.stock.Stock;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
@@ -12,12 +12,12 @@ import org.springframework.data.redis.serializer.RedisSerializationContext;
 @Configuration
 public class RedisConfig {
     @Bean
-    public ReactiveRedisTemplate<String, Book> reactiveRedisBookTemplate(ReactiveRedisConnectionFactory factory) {
-        Jackson2JsonRedisSerializer<Book> serializer = new Jackson2JsonRedisSerializer<>(Book.class);
+    public ReactiveRedisTemplate<String, Stock> reactiveRedisStockTemplate(ReactiveRedisConnectionFactory factory) {
+        Jackson2JsonRedisSerializer<Stock> serializer = new Jackson2JsonRedisSerializer<>(Stock.class);
 
-        RedisSerializationContext.RedisSerializationContextBuilder<String, Book> builder =
+        RedisSerializationContext.RedisSerializationContextBuilder<String, Stock> builder =
                 RedisSerializationContext.newSerializationContext(new Jackson2JsonRedisSerializer<>(String.class));
-        RedisSerializationContext<String, Book> context = builder.value(serializer).build();
+        RedisSerializationContext<String, Stock> context = builder.value(serializer).build();
 
         return new ReactiveRedisTemplate<>(factory, context);
     }

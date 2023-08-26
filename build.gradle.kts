@@ -15,15 +15,15 @@ repositories {
 }
 
 dependencies {
-//	implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
 	implementation("org.springframework.boot:spring-boot-starter-data-redis-reactive")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("org.springframework.boot:spring-boot-docker-compose")
 	implementation("net.datafaker:datafaker:2.0.1")
-//	runtimeOnly("org.postgresql:postgresql")
-//	runtimeOnly("org.postgresql:r2dbc-postgresql")
+	implementation("org.projectlombok:lombok:1.18.28")
+	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.2")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("io.projectreactor:reactor-test")
+	annotationProcessor("org.projectlombok:lombok:1.18.28")
 }
 
 tasks.withType<Test> {
