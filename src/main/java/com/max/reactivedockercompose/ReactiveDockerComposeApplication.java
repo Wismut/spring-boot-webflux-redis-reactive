@@ -1,7 +1,7 @@
-package dev.tpcoder.reactivedockercompose;
+package com.max.reactivedockercompose;
 
-import dev.tpcoder.reactivedockercompose.book.Book;
-import dev.tpcoder.reactivedockercompose.book.BookRepository;
+import com.max.reactivedockercompose.book.Book;
+//import com.max.reactivedockercompose.book.BookRepository;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,7 +17,7 @@ public class ReactiveDockerComposeApplication {
         SpringApplication.run(ReactiveDockerComposeApplication.class, args);
     }
 
-    @Bean
+    /*@Bean
     public ApplicationRunner loadData(BookRepository bookRepository) {
         List<Book> initialBooks = List.of(
                 new Book(null, "The Catcher in the Rye", "0316769487"),
@@ -32,5 +32,5 @@ public class ReactiveDockerComposeApplication {
                 .flatMap(bookRepository::save)
                 .thenMany(bookRepository.findAll())
                 .subscribe(System.out::println);
-    }
+    }*/
 }

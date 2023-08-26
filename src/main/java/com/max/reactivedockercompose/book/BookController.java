@@ -1,4 +1,4 @@
-package dev.tpcoder.reactivedockercompose.book;
+package com.max.reactivedockercompose.book;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
