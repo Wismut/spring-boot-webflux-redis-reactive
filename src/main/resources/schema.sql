@@ -1,11 +1,7 @@
-CREATE TABLE IF NOT EXISTS book
+CREATE TABLE IF NOT EXISTS users
 (
-    id    SERIAL PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    isbn  VARCHAR(20)  NOT NULL
+    id       SERIAL PRIMARY KEY,
+    username VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    api_key  VARCHAR(255)
 );
--- CREATE TABLE IF NOT EXISTS company
--- (
---     id    SERIAL PRIMARY KEY,
---     name  VARCHAR(255) NOT NULL
--- );

@@ -27,7 +27,5 @@ public class DataLoader {
             stockService.save(stock).subscribe();
         }
         System.out.println("Companies and stocks have been saved at " + LocalDateTime.now());
-//        System.out.println(companyService.findAll().count().block());
-//        System.out.println(stockService.findAll().count().block());
     }
 }
