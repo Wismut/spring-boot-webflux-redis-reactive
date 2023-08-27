@@ -6,10 +6,10 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.lang.NonNull;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.SecretKey;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
@@ -34,26 +34,26 @@ public class JwtTokenUtil implements Serializable {
     }
 
     public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = getAllClaimsFromToken(token);
+        final var claims = getAllClaimsFromToken(token);
         return claimsResolver.apply(claims);
     }
 
     //for retrieveing any information from token we will need the secret key
     private Claims getAllClaimsFromToken(String token) {
-        SecretKey secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+        final var secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
         return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
     }
 
     //check if the token has expired
     private boolean isTokenExpired(String token) {
-        final Date expiration = getExpirationDateFromToken(token);
+        final var expiration = getExpirationDateFromToken(token);
         return expiration.before(new Date());
     }
 
     //generate token for user
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(@NonNull String username) {
         Map<String, Object> claims = new HashMap<>();
-        return doGenerateToken(claims, userDetails.getUsername());
+        return doGenerateToken(claims, username);
     }
 
     //while creating the token -
@@ -62,7 +62,7 @@ public class JwtTokenUtil implements Serializable {
     //3. According to JWS Compact Serialization(https://tools.ietf.org/html/draft-ietf-jose-json-web-signature-41#section-3.1)
     //   compaction of the JWT to a URL-safe string
     private String doGenerateToken(Map<String, Object> claims, String subject) {
-        SecretKey secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+        final var secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
                 .signWith(secretKey, SignatureAlgorithm.HS512).compact();
@@ -70,7 +70,7 @@ public class JwtTokenUtil implements Serializable {
 
     //validate token
     public boolean validateToken(String token, UserDetails userDetails) {
-        final String username = getUsernameFromToken(token);
+        final var username = getUsernameFromToken(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 }

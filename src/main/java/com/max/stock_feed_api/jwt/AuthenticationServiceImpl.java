@@ -6,8 +6,6 @@ import com.max.stock_feed_api.user.User;
 import com.max.stock_feed_api.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +17,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtAuthenticationService jwtService;
-    private final AuthenticationManager authenticationManager;
 
     @Override
     public String signup(@NonNull SignUpRequest request) {
@@ -33,14 +30,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public JwtAuthenticationResponse signin(@NonNull SignInRequest request) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
         var user = userRepository.findByUsername(request.getUsername());
         if (isNull(user)) {
             throw new IllegalArgumentException("Invalid username or password");
         }
-        var jwt = jwtService.createToken(user.getUsername(), user.getPassword());
+        var jwt = jwtService.createToken(user.getUsername());
         user.setToken(jwt);
-        userRepository.save(user);
+        userRepository.update(user);
         return JwtAuthenticationResponse.builder().token(jwt).build();
     }
 }

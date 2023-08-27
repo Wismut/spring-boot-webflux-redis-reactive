@@ -5,10 +5,14 @@ spring:
       mode: always
 
 jwt:
-  secret: w90rt6115y
+  secret: cdfbsdvfbfgnsdxfcbdcgnbfszxfdcsd389defhnbedsfvbgedthjnedfbhedrjntrdfghrdb7345235463254457645766756edfhesdrdfthgedsrhdsfvegtfnhbedrfhbg9
 
 logging:
   level:
     com:
       max:
         stock_feed_api: trace
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
