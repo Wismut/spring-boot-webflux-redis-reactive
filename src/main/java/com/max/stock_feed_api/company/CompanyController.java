@@ -10,6 +10,8 @@ import reactor.core.publisher.Flux;
 public record CompanyController(CompanyService service) {
     @GetMapping
     public Flux<Company> findAll() {
-        return service.findAll();
+        Flux<Company> all = service.findAll();
+        System.out.println("CompanyController findAll");
+        return all;
     }
 }

@@ -35,12 +35,14 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(POST, "/api/register").permitAll()
                         .requestMatchers(POST, "/api/get-api-key").permitAll()
+                        .requestMatchers(GET, "/api/companies").permitAll()
+                        .requestMatchers(GET, "/api/stocks/*").permitAll()
                         .requestMatchers(GET, "/v3/api-docs").permitAll()
                         .requestMatchers(GET, "/v3/api-docs/swagger-config").permitAll()
                         .requestMatchers(GET, "/swagger-ui/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
-                .authenticationProvider(authenticationProvider())
+//                .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
@@ -50,13 +52,13 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(jwtUserDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
-    }
+//    @Bean
+//    public AuthenticationProvider authenticationProvider() {
+//        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+//        authProvider.setUserDetailsService(jwtUserDetailsService);
+//        authProvider.setPasswordEncoder(passwordEncoder());
+//        return authProvider;
+//    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
