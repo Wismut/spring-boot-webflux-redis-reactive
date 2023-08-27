@@ -38,13 +38,16 @@ public class StockService {
     public void updatePrices() {
         var i = new int[1];
         reactiveRedisStockTemplate.keys(KEY + "*")
-                .flatMap(key -> reactiveRedisStockTemplate.opsForValue().get(key))
-                .map(stock -> {
-                    i[0]++;
-                    var updatedStock = new Stock(stock.name(), stock.code(), faker.random().nextFloat(), stock.dateTime(), stock.companySymbol());
-                    reactiveRedisStockTemplate.opsForValue().set(KEY + stock.code(), updatedStock);
-                    return updatedStock;
-                });
-        log.exit(i[0]);
+                .flatMap(key ->
+                        reactiveRedisStockTemplate.opsForValue().get(key)
+                                .flatMap(stock -> {
+                                    i[0]++;
+                                    var updatedStock = new Stock(stock.name(), stock.code(), faker.random().nextFloat(), stock.dateTime(), stock.companySymbol());
+                                    return reactiveRedisStockTemplate.opsForValue().set(KEY + stock.code(), updatedStock);
+                                })
+                )
+                .then()
+                .doFinally(signalType -> log.info("Total updates: " + i[0]))
+                .block();
     }
 }

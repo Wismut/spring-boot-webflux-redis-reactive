@@ -4,10 +4,11 @@ import com.max.stock_feed_api.company.Company;
 import com.max.stock_feed_api.company.CompanyService;
 import com.max.stock_feed_api.stock.Stock;
 import com.max.stock_feed_api.stock.StockService;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.XSlf4j;
 import net.datafaker.Faker;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -21,10 +22,10 @@ public class DataLoader {
     private final StockService stockService;
     private final Faker faker = new Faker();
 
-    @PostConstruct
+    @EventListener(ApplicationReadyEvent.class)
     public void loadRandomDataToRedis() {
         log.entry();
-        for (int i = 0; i < 1_000_000; i++) {
+        for (int i = 0; i < 10_000; i++) {
             var company = new Company(faker.company().name(), UUID.randomUUID().toString());
             var stock = new Stock(faker.stock().nsdqSymbol(), UUID.randomUUID().toString(), faker.random().nextFloat(), LocalDateTime.now(), company.symbol());
             companyService.save(company).subscribe();

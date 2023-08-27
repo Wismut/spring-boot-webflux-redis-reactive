@@ -11,5 +11,4 @@ logging:
   level:
     com:
       max:
-        stock_feed_api:
-          loader: trace
+        stock_feed_api: trace
