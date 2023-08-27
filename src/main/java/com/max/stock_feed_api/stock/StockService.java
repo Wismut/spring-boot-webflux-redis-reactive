@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
+
 @XSlf4j
 @Service
 @RequiredArgsConstructor
@@ -42,12 +44,12 @@ public class StockService {
                         reactiveRedisStockTemplate.opsForValue().get(key)
                                 .flatMap(stock -> {
                                     i[0]++;
-                                    var updatedStock = new Stock(stock.name(), stock.code(), faker.random().nextFloat(), stock.dateTime(), stock.companySymbol());
+                                    var updatedStock = new Stock(stock.name(), stock.code(), faker.random().nextFloat(), LocalDateTime.now(), stock.companySymbol());
                                     return reactiveRedisStockTemplate.opsForValue().set(KEY + stock.code(), updatedStock);
                                 })
                 )
                 .then()
-                .doFinally(signalType -> log.info("Total updates: " + i[0]))
+                .doFinally(signalType -> log.info("Total stocks updates: " + i[0]))
                 .block();
     }
 }

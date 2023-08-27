@@ -26,11 +26,11 @@ public class JwtTokenUtil implements Serializable {
         return getClaimFromToken(token, Claims::getSubject);
     }
 
-    public Date getExpirationDateFromToken(@NonNull String token) {
+    private Date getExpirationDateFromToken(@NonNull String token) {
         return getClaimFromToken(token, Claims::getExpiration);
     }
 
-    public <T> T getClaimFromToken(@NonNull String token, @NonNull Function<Claims, T> claimsResolver) {
+    private  <T> T getClaimFromToken(@NonNull String token, @NonNull Function<Claims, T> claimsResolver) {
         final var claims = getAllClaimsFromToken(token);
         return claimsResolver.apply(claims);
     }

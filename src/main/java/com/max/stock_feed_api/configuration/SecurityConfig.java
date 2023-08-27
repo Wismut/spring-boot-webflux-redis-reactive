@@ -1,13 +1,10 @@
 package com.max.stock_feed_api.configuration;
 
 import com.max.stock_feed_api.jwt.JwtAuthenticationFilter;
-import com.max.stock_feed_api.jwt.JwtUserDetailsService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -27,7 +24,6 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @AllArgsConstructor
 public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final JwtUserDetailsService jwtUserDetailsService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -36,13 +32,12 @@ public class SecurityConfig {
                         .requestMatchers(POST, "/api/register").permitAll()
                         .requestMatchers(POST, "/api/get-api-key").permitAll()
                         .requestMatchers(GET, "/api/companies").permitAll()
-                        .requestMatchers(GET, "/api/stocks/*").permitAll()
+                        .requestMatchers(GET, "/api/stocks/**").permitAll()
                         .requestMatchers(GET, "/v3/api-docs").permitAll()
                         .requestMatchers(GET, "/v3/api-docs/swagger-config").permitAll()
                         .requestMatchers(GET, "/swagger-ui/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
-//                .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
@@ -51,14 +46,6 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-//    @Bean
-//    public AuthenticationProvider authenticationProvider() {
-//        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-//        authProvider.setUserDetailsService(jwtUserDetailsService);
-//        authProvider.setPasswordEncoder(passwordEncoder());
-//        return authProvider;
-//    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
