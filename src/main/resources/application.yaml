@@ -3,3 +3,13 @@ spring:
     init:
       schema-locations: classpath:schema.sql
       mode: always
+
+jwt:
+  secret: w90rt6115y
+
+logging:
+  level:
+    com:
+      max:
+        stock_feed_api:
+          loader: trace

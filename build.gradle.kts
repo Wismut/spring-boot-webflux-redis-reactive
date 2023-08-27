@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.max"
-version = "0.0.1"
+version = "1.0"
 java.sourceCompatibility = JavaVersion.VERSION_17
 
 repositories {
@@ -28,6 +28,7 @@ dependencies {
     implementation("org.mybatis.spring.boot:mybatis-spring-boot-autoconfigure:3.0.2")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("io.jsonwebtoken:jjwt-api:0.11.5")
+    implementation("org.postgresql:postgresql")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")
