@@ -24,8 +24,8 @@ public class DataLoader {
 
     @EventListener(ApplicationReadyEvent.class)
     public void loadRandomDataToRedis() {
-        log.entry();
-        for (int i = 0; i < 10_000; i++) {
+        log.entry(LocalDateTime.now());
+        for (int i = 0; i < 100; i++) {
             var company = new Company(faker.company().name(), UUID.randomUUID().toString());
             var stock = new Stock(faker.stock().nsdqSymbol(), UUID.randomUUID().toString(), faker.random().nextFloat(), LocalDateTime.now(), company.symbol());
             companyService.save(company).subscribe();
