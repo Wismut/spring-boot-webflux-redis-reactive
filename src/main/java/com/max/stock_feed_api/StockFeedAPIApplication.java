@@ -10,9 +10,4 @@ public class StockFeedAPIApplication {
     public static void main(String[] args) {
         SpringApplication.run(StockFeedAPIApplication.class, args);
     }
-
-//    @Bean
-//    public ApplicationRunner loadData(DataLoader loader) {
-//        return args -> loader.loadRandomDataToRedis();
-//    }
 }
