@@ -5,7 +5,6 @@ import lombok.extern.slf4j.XSlf4j;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
-import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -40,7 +39,7 @@ public class StockService {
         return reactiveRedisStockTemplate.opsForValue().multiSet(stockByKey);
     }
 
-    public Disposable deleteAll() {
-        return reactiveRedisStockTemplate.delete(reactiveRedisStockTemplate.keys(KEY + "*")).subscribe();
+    public Mono<Long> deleteAll() {
+        return reactiveRedisStockTemplate.delete(reactiveRedisStockTemplate.keys(KEY + "*"));
     }
 }

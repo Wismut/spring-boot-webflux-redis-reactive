@@ -28,8 +28,8 @@ public class DataLoader {
     public void loadRandomDataToRedis() {
         var now = LocalDateTime.now();
         log.entry(now);
-        companyService.deleteAll().subscribe();
-        stockService.deleteAll();
+        companyService.deleteAll().block();
+        stockService.deleteAll().block();
         var stockByKey = new HashMap<String, Stock>();
         var companyByKey = new HashMap<String, Company>();
         for (var i = 0; i < 100_000; i++) {
@@ -38,8 +38,8 @@ public class DataLoader {
             companyByKey.put(CompanyService.KEY + company.symbol(), company);
             stockByKey.put(StockService.KEY + stock.code(), stock);
         }
-        companyService.saveAll(companyByKey).subscribe();
-        stockService.saveAll(stockByKey).subscribe();
+        companyService.saveAll(companyByKey).block();
+        stockService.saveAll(stockByKey).block();
         log.exit("Was completed in " + ChronoUnit.SECONDS.between(now, LocalDateTime.now()) + " seconds");
     }
 }
