@@ -4,16 +4,19 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.data.redis.core.ReactiveValueOperations;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 
-import static org.mockito.Mockito.*;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.when;
 
 class StockServiceTest {
 
@@ -71,7 +74,7 @@ class StockServiceTest {
         when(reactiveValueOperations.set(anyString(), any(Stock.class))).thenReturn(Mono.just(true));
         when(reactiveRedisStockTemplate.opsForValue()).thenReturn(reactiveValueOperations);
 
-        Mono<Stock> result = stockService.save(stock);
+        var result = stockService.save(stock);
 
         assertNotNull(result);
         assertEquals(stock, result.block());

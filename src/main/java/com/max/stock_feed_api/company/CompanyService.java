@@ -7,12 +7,14 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Map;
+
 @Service
 @RequiredArgsConstructor
 public class CompanyService {
     private final ReactiveRedisTemplate<String, Company> reactiveRedisCompanyTemplate;
 
-    private static final String KEY = "company:";
+    public static final String KEY = "company:";
 
     public Mono<Company> findBySymbol(@NonNull String symbol) {
         var key = KEY + symbol;
@@ -30,5 +32,13 @@ public class CompanyService {
 
     public Mono<Boolean> deleteById(@NonNull Long id) {
         return reactiveRedisCompanyTemplate.opsForValue().delete(KEY + id);
+    }
+
+    public Mono<Long> deleteAll() {
+        return reactiveRedisCompanyTemplate.delete(reactiveRedisCompanyTemplate.keys(KEY + "*"));
+    }
+
+    public Mono<Boolean> saveAll(@NonNull Map<String, Company> companyByKey) {
+        return reactiveRedisCompanyTemplate.opsForValue().multiSet(companyByKey);
     }
 }

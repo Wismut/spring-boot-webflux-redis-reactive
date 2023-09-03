@@ -12,6 +12,8 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
 import java.util.UUID;
 
 @XSlf4j
@@ -24,13 +26,20 @@ public class DataLoader {
 
     @EventListener(ApplicationReadyEvent.class)
     public void loadRandomDataToRedis() {
-        log.entry(LocalDateTime.now());
-        for (int i = 0; i < 100; i++) {
+        var now = LocalDateTime.now();
+        log.entry(now);
+        companyService.deleteAll().subscribe();
+        stockService.deleteAll();
+        var stockByKey = new HashMap<String, Stock>();
+        var companyByKey = new HashMap<String, Company>();
+        for (var i = 0; i < 100_000; i++) {
             var company = new Company(faker.company().name(), UUID.randomUUID().toString());
             var stock = new Stock(faker.stock().nsdqSymbol(), UUID.randomUUID().toString(), faker.random().nextFloat(), LocalDateTime.now(), company.symbol());
-            companyService.save(company).subscribe();
-            stockService.save(stock).subscribe();
+            companyByKey.put(CompanyService.KEY + company.symbol(), company);
+            stockByKey.put(StockService.KEY + stock.code(), stock);
         }
-        log.exit(LocalDateTime.now());
+        companyService.saveAll(companyByKey).subscribe();
+        stockService.saveAll(stockByKey).subscribe();
+        log.exit("Was completed in " + ChronoUnit.SECONDS.between(now, LocalDateTime.now()) + " seconds");
     }
 }

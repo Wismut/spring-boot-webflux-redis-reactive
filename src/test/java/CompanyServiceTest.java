@@ -2,14 +2,19 @@ import com.max.stock_feed_api.company.Company;
 import com.max.stock_feed_api.company.CompanyService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.data.redis.core.ReactiveValueOperations;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.util.Collections;
+
+import static com.max.stock_feed_api.company.CompanyService.KEY;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
@@ -17,6 +22,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class CompanyServiceTest {
     @Mock
     private ReactiveRedisTemplate<String, Company> reactiveRedisCompanyTemplate;
@@ -86,7 +92,7 @@ public class CompanyServiceTest {
         when(reactiveValueOperations.set(any(), eq(company)))
                 .thenReturn(Mono.just(true));
 
-        Mono<Company> result = companyService.save(company);
+        var result = companyService.save(company);
 
         StepVerifier.create(result)
                 .expectNext(company)
@@ -134,5 +140,18 @@ public class CompanyServiceTest {
 
         verify(reactiveValueOperations, times(1)).get(key);
         verifyNoMoreInteractions(reactiveValueOperations);
+    }
+
+    @Test
+    void testSaveAll() {
+        var companyMap = Collections.singletonMap("KEY1", new Company("Company1", "abc"));
+
+        when(reactiveRedisCompanyTemplate.opsForValue().multiSet(companyMap)).thenReturn(Mono.just(true));
+
+        StepVerifier.create(companyService.saveAll(companyMap))
+                .expectNextMatches(result -> result)
+                .verifyComplete();
+
+        verify(reactiveRedisCompanyTemplate.opsForValue(), times(1)).multiSet(companyMap);
     }
 }

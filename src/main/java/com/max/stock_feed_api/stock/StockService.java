@@ -5,8 +5,11 @@ import lombok.extern.slf4j.XSlf4j;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
+import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.Map;
 
 @XSlf4j
 @Service
@@ -31,5 +34,13 @@ public class StockService {
 
     public Mono<Boolean> deleteById(@NonNull Long id) {
         return reactiveRedisStockTemplate.opsForValue().delete(KEY + id);
+    }
+
+    public Mono<Boolean> saveAll(@NonNull Map<String, Stock> stockByKey) {
+        return reactiveRedisStockTemplate.opsForValue().multiSet(stockByKey);
+    }
+
+    public Disposable deleteAll() {
+        return reactiveRedisStockTemplate.delete(reactiveRedisStockTemplate.keys(KEY + "*")).subscribe();
     }
 }
