@@ -12,7 +12,6 @@ import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Map;
 
 import static com.max.stock_feed_api.stock.StockService.KEY;
 import static java.util.Objects.isNull;
@@ -26,18 +25,16 @@ public record StockPriceUpdater(@NonNull StockService stockService,
     private static LocalDateTime end;
 
     @Scheduled(fixedDelay = 60_000, initialDelay = 60_000)
-    public void updatePricesMultiSet() {
+    public void updatePricesMulti() {
         var now = LocalDateTime.now();
         var i = new int[1];
-        var matchingKeys = reactiveRedisStockTemplate.keys(KEY + "*");
-        var updateOperation = matchingKeys
-                .flatMap(key -> reactiveRedisStockTemplate.opsForValue().get(key)
-                        .map(stock -> {
-                            i[0]++;
-                            var updatedStock = updatePrice(stock);
-                            return Map.entry(KEY + stock.code(), updatedStock);
-                        }))
-                .collectMap(Map.Entry::getKey, Map.Entry::getValue)
+        stockService.findAll()
+                .flatMap(stock -> {
+                    i[0]++;
+                    var updatedStock = updatePrice(stock);
+                    return Mono.just(updatedStock);
+                })
+                .collectMap(updatedStock -> KEY + updatedStock.code())
                 .flatMap(stockMap -> {
                     if (stockMap.isEmpty()) {
                         return Mono.empty();
@@ -47,10 +44,10 @@ public record StockPriceUpdater(@NonNull StockService stockService,
                 })
                 .then()
                 .doFinally(signalType -> {
-                    log.info("Total stocks updates updatePricesMultiSet: " + i[0] + " in " + ChronoUnit.SECONDS.between(now, LocalDateTime.now()) + " seconds");
+                    log.info("Total stocks updates updatePricesMulti: " + i[0] + " in " + ChronoUnit.SECONDS.between(now, LocalDateTime.now()) + " seconds");
                     log.info("Time diff in seconds between start and end: " + ChronoUnit.SECONDS.between(start, end));
-                });
-        updateOperation.subscribe();
+                })
+                .subscribe();
     }
 
     public Stock updatePrice(@NonNull Stock stock) {

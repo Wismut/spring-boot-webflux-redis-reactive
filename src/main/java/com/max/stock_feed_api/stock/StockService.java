@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
 import java.util.Map;
 
 @XSlf4j
@@ -28,7 +29,7 @@ public class StockService {
     }
 
     public Mono<Stock> save(@NonNull Stock stock) {
-        return reactiveRedisStockTemplate.opsForValue().set(KEY + stock.code(), stock).thenReturn(stock);
+        return reactiveRedisStockTemplate.opsForValue().set(KEY + stock.code(), stock, Duration.ofSeconds(60)).thenReturn(stock);
     }
 
     public Mono<Boolean> deleteById(@NonNull Long id) {

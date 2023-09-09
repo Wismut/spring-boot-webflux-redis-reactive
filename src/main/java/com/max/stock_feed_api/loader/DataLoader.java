@@ -10,6 +10,7 @@ import net.datafaker.Faker;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -28,8 +29,6 @@ public class DataLoader {
     public void loadRandomDataToRedis() {
         var now = LocalDateTime.now();
         log.entry(now);
-        companyService.deleteAll().block();
-        stockService.deleteAll().block();
         var stockByKey = new HashMap<String, Stock>();
         var companyByKey = new HashMap<String, Company>();
         for (var i = 0; i < 100_000; i++) {
@@ -38,8 +37,8 @@ public class DataLoader {
             companyByKey.put(CompanyService.KEY + company.symbol(), company);
             stockByKey.put(StockService.KEY + stock.code(), stock);
         }
-        companyService.saveAll(companyByKey).block();
-        stockService.saveAll(stockByKey).block();
+        companyService.saveAll(companyByKey).subscribe();
+        stockService.saveAll(stockByKey).subscribe();
         log.exit("Was completed in " + ChronoUnit.SECONDS.between(now, LocalDateTime.now()) + " seconds");
     }
 }
