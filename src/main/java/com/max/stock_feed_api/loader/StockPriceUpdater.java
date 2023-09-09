@@ -26,7 +26,7 @@ public record StockPriceUpdater(@NonNull StockService stockService,
 
     @Scheduled(fixedDelay = 60_000, initialDelay = 60_000)
     public void updatePricesMulti() {
-        var now = LocalDateTime.now();
+        var now = start = LocalDateTime.now();
         var i = new int[1];
         stockService.findAll()
                 .flatMap(stock -> {
@@ -51,11 +51,8 @@ public record StockPriceUpdater(@NonNull StockService stockService,
     }
 
     public Stock updatePrice(@NonNull Stock stock) {
-        if (isNull(start)) {
-            start = LocalDateTime.now();
-        }
         end = LocalDateTime.now();
         // TODO: 8/28/2023 implement stock price update logic
-        return new Stock(stock.name(), stock.code(), faker.random().nextFloat(), LocalDateTime.now(), stock.companySymbol());
+        return new Stock(stock.name(), stock.code(), faker.random().nextFloat(), stock.companySymbol());
     }
 }

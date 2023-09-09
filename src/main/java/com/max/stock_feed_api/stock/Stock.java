@@ -1,16 +1,5 @@
 package com.max.stock_feed_api.stock;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+public record Stock(String name, String code, float price, String companySymbol) {
 
-import java.time.LocalDateTime;
-
-public record Stock(String name, String code, float price, LocalDateTime dateTime, String companySymbol) {
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    public LocalDateTime getDateTime() {
-       return dateTime;
-    }
 }

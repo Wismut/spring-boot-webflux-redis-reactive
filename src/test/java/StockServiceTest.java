@@ -9,8 +9,6 @@ import org.springframework.data.redis.core.ReactiveValueOperations;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.time.LocalDateTime;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -37,7 +35,7 @@ class StockServiceTest {
     @Test
     void findByCode_ValidCode_ReturnsStock() {
         String code = "AAPL";
-        Stock stock = new Stock(code, "Apple Inc.", 150.0f, LocalDateTime.now(), "");
+        Stock stock = new Stock(code, "Apple Inc.", 150.0f, "");
 
         when(reactiveValueOperations.get(anyString())).thenReturn(Mono.just(stock));
         when(reactiveRedisStockTemplate.opsForValue()).thenReturn(reactiveValueOperations);
@@ -51,8 +49,8 @@ class StockServiceTest {
     @Test
     void findAll_ReturnsListOfStocks() {
         String keyPattern = StockService.KEY + "*";
-        Stock stock1 = new Stock("AAPL", "Apple Inc.", 150.0f, LocalDateTime.now(), "");
-        Stock stock2 = new Stock("GOOG", "Alphabet Inc.", 2500.0f, LocalDateTime.now(), "");
+        Stock stock1 = new Stock("AAPL", "Apple Inc.", 150.0f, "");
+        Stock stock2 = new Stock("GOOG", "Alphabet Inc.", 2500.0f, "");
 
         when(reactiveRedisStockTemplate.keys(keyPattern)).thenReturn(Flux.just("stock:AAPL", "stock:GOOG"));
         when(reactiveValueOperations.get("stock:AAPL")).thenReturn(Mono.just(stock1));
@@ -69,7 +67,7 @@ class StockServiceTest {
 
     @Test
     void save_ValidStock_ReturnsSavedStock() {
-        Stock stock = new Stock("AAPL", "Apple Inc.", 150.0f, LocalDateTime.now(), "");
+        Stock stock = new Stock("AAPL", "Apple Inc.", 150.0f, "");
 
         when(reactiveValueOperations.set(anyString(), any(Stock.class))).thenReturn(Mono.just(true));
         when(reactiveRedisStockTemplate.opsForValue()).thenReturn(reactiveValueOperations);
