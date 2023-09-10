@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 import static com.max.stock_feed_api.stock.StockService.KEY;
-import static java.util.Objects.isNull;
 
 @XSlf4j
 @Service

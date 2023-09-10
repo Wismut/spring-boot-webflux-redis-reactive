@@ -17,7 +17,7 @@ import java.util.function.Function;
 
 @Component
 public class JwtTokenUtil implements Serializable {
-    public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
+    private static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
 
     @Value("${jwt.secret}")
     private String secret;
@@ -46,7 +46,7 @@ public class JwtTokenUtil implements Serializable {
     }
 
     public String generateToken(@NonNull String username) {
-        Map<String, Object> claims = new HashMap<>();
+        final Map<String, Object> claims = new HashMap<>();
         return doGenerateToken(claims, username);
     }
 
