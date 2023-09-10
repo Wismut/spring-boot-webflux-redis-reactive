@@ -38,8 +38,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new IllegalArgumentException("Invalid username or password");
         }
         var jwt = jwtService.createToken(user.getUsername());
-        user.setApiKey(jwt);
-        userRepository.update(user);
-        return JwtAuthenticationResponse.builder().token(jwt).build();
+        return JwtAuthenticationResponse.builder().jwt(jwt).build();
     }
 }

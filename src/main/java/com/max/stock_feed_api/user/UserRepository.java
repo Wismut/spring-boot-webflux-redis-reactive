@@ -14,11 +14,11 @@ public interface UserRepository {
     List<User> findAll();
 
     @Insert("INSERT INTO users(username, password, role) VALUES(#{username}, #{password}, #{role})")
-    int save(User user);
+    int save(@NonNull User user);
 
     @Select("SELECT * FROM users WHERE username=#{username}")
-    User findByUsername(String username);
+    User findByUsername(@NonNull String username);
 
-    @Update("UPDATE users SET token=#{token} WHERE id=#{id}")
+    @Update("UPDATE users SET api_key=#{apiKey} WHERE id=#{id}")
     void update(@NonNull User user);
 }

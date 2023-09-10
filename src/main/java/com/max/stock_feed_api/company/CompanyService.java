@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
 import java.util.Map;
 
 @Service
@@ -27,7 +28,7 @@ public class CompanyService {
     }
 
     public Mono<Company> save(@NonNull Company company) {
-        return reactiveRedisCompanyTemplate.opsForValue().set(KEY + company.symbol(), company).thenReturn(company);
+        return reactiveRedisCompanyTemplate.opsForValue().set(KEY + company.symbol(), company, Duration.ofSeconds(90)).thenReturn(company);
     }
 
     public Mono<Boolean> deleteById(@NonNull Long id) {

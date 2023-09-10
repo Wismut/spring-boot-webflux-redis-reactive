@@ -67,7 +67,7 @@ class StockServiceTest {
 
     @Test
     void save_ValidStock_ReturnsSavedStock() {
-        Stock stock = new Stock("AAPL", "Apple Inc.", 150.0f, "");
+        var stock = new Stock("AAPL", "Apple Inc.", 150.0f, "");
 
         when(reactiveValueOperations.set(anyString(), any(Stock.class))).thenReturn(Mono.just(true));
         when(reactiveRedisStockTemplate.opsForValue()).thenReturn(reactiveValueOperations);

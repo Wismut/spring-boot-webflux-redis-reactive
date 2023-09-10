@@ -1,20 +1,18 @@
 package com.max.stock_feed_api.api_key;
 
-import jakarta.servlet.http.HttpServletRequest;
+import com.max.stock_feed_api.user.User;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 
-public class ApiKeyAuthenticationService {
-    private static final String AUTH_TOKEN_HEADER_NAME = "X-API-KEY";
-    private static final String API_KEY = "rfthbswdfrnhrdfrbderfjnedsfrbnrdg";
+import static org.apache.logging.log4j.util.Strings.isEmpty;
 
-    public static Authentication getAuthentication(HttpServletRequest request) {
-        String apiKey = request.getHeader(AUTH_TOKEN_HEADER_NAME);
-        if (apiKey == null || !apiKey.equals(API_KEY)) {
+public class ApiKeyAuthenticationService {
+    public static Authentication getAuthentication(@NonNull User user, @NonNull String requestApiKeyHeader) {
+        if (isEmpty(requestApiKeyHeader) || isEmpty(user.getApiKey()) || !requestApiKeyHeader.equals(user.getApiKey())) {
             throw new BadCredentialsException("Invalid API Key");
         }
-
-        return new ApiKeyAuthentication(apiKey, AuthorityUtils.NO_AUTHORITIES);
+        return new ApiKeyAuthentication(requestApiKeyHeader, AuthorityUtils.NO_AUTHORITIES);
     }
 }

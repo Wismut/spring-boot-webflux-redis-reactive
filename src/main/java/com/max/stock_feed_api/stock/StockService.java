@@ -29,7 +29,7 @@ public class StockService {
     }
 
     public Mono<Stock> save(@NonNull Stock stock) {
-        return reactiveRedisStockTemplate.opsForValue().set(KEY + stock.code(), stock, Duration.ofSeconds(60)).thenReturn(stock);
+        return reactiveRedisStockTemplate.opsForValue().set(KEY + stock.code(), stock, Duration.ofSeconds(90)).thenReturn(stock);
     }
 
     public Mono<Boolean> deleteById(@NonNull Long id) {

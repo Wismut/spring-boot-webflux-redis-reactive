@@ -20,12 +20,10 @@ import static com.max.stock_feed_api.stock.StockService.KEY;
 public record StockPriceUpdater(@NonNull StockService stockService,
                                 @NonNull ReactiveRedisTemplate<String, Stock> reactiveRedisStockTemplate) {
     private static final Faker faker = new Faker();
-    private static LocalDateTime start;
-    private static LocalDateTime end;
 
     @Scheduled(fixedDelay = 60_000, initialDelay = 60_000)
     public void updatePricesMulti() {
-        var now = start = LocalDateTime.now();
+        var now = LocalDateTime.now();
         var i = new int[1];
         stockService.findAll()
                 .flatMap(stock -> {
@@ -44,13 +42,11 @@ public record StockPriceUpdater(@NonNull StockService stockService,
                 .then()
                 .doFinally(signalType -> {
                     log.info("Total stocks updates updatePricesMulti: " + i[0] + " in " + ChronoUnit.SECONDS.between(now, LocalDateTime.now()) + " seconds");
-                    log.info("Time diff in seconds between start and end: " + ChronoUnit.SECONDS.between(start, end));
                 })
                 .subscribe();
     }
 
     public Stock updatePrice(@NonNull Stock stock) {
-        end = LocalDateTime.now();
         // TODO: 8/28/2023 implement stock price update logic
         return new Stock(stock.name(), stock.code(), faker.random().nextFloat(), stock.companySymbol());
     }
