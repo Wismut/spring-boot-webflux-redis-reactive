@@ -12,8 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/get-api-key")
+@RequestMapping()
 public class ApiKeyController {
+    public static final String PATH = "/api/get-api-key";
     private final AuthenticationService authenticationService;
 
     @PostMapping

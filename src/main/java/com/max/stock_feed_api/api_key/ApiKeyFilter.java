@@ -1,5 +1,7 @@
 package com.max.stock_feed_api.api_key;
 
+import com.max.stock_feed_api.company.CompanyController;
+import com.max.stock_feed_api.stock.StockController;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,13 +20,13 @@ import java.util.List;
 @Component
 @AllArgsConstructor
 public class ApiKeyFilter extends OncePerRequestFilter {
-    private final List<String> securedByApiKey = List.of("/api/companies", "/api/stocks");
+    private final List<String> protectedByApiKey = List.of(CompanyController.PATH, StockController.PATH);
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        var needToCheckApiKey = securedByApiKey.stream()
+        var needToCheckApiKey = protectedByApiKey.stream()
                 .anyMatch(s -> request.getRequestURI().contains(s));
         if (!needToCheckApiKey) {
             filterChain.doFilter(request, response);
@@ -33,11 +35,12 @@ public class ApiKeyFilter extends OncePerRequestFilter {
         try {
             var authentication = ApiKeyAuthenticationService.getAuthentication(request);
             SecurityContextHolder.getContext().setAuthentication(authentication);
-        } catch (Exception exp) {
+        } catch (Exception e) {
+            log.warn("Try to access to protected recourses", e);
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             var writer = response.getWriter();
-            writer.print(exp.getMessage());
+            writer.print(e.getMessage());
             writer.flush();
             writer.close();
         }
