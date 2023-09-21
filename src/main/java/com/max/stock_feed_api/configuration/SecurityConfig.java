@@ -36,6 +36,7 @@ public class SecurityConfig {
                         .requestMatchers(GET, "/v3/api-docs").permitAll()
                         .requestMatchers(GET, "/v3/api-docs/swagger-config").permitAll()
                         .requestMatchers(GET, "/swagger-ui/**").permitAll()
+                        .requestMatchers(GET, "/actuator/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

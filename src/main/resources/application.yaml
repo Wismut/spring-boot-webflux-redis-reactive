@@ -16,3 +16,9 @@ logging:
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
