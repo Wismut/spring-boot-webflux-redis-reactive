@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE mapper
+        PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.max.stock_feed_api.user.UserRepository">
+
+    <select id="findByUsername" resultType="com.max.stock_feed_api.user.User">
+        select id, username, password, role
+        from users
+        <where>
+            <if test="name != null and name != ''">username = #{username}</if>
+        </where>
+    </select>
+    <select id="update" resultType="java.lang.Long">
+        update users set api_key = #{apiKey}
+        <where>
+            <if test="name != null and name != ''">id = #{id}</if>
+        </where>
+    </select>
+</mapper>

@@ -24,7 +24,6 @@ public record StockPriceUpdater(@NonNull StockService stockService,
     }
 
     public Stock updatePrice(@NonNull Stock stock) {
-        // TODO: 8/28/2023 implement stock price update logic
         return new Stock(stock.name(), stock.code(), (float) Math.random(), stock.companySymbol());
     }
 }
