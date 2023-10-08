@@ -9,9 +9,8 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
-
 import static java.util.Objects.isNull;
+import static java.util.UUID.randomUUID;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +24,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         final var user = User.builder()
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .apiKey(UUID.randomUUID().toString())
+                .apiKey(randomUUID().toString())
                 .role(Role.USER).build();
         userRepository.save(user);
         return "User " + user.getUsername() + " was successfully created with API key = " + user.getApiKey();
@@ -37,7 +36,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (isNull(user)) {
             throw new IllegalArgumentException("Invalid username or password");
         }
-        var jwt = jwtService.createToken(user.getUsername());
+        var jwt = jwtService.createToken(user.block().getUsername());
         return JwtAuthenticationResponse.builder().jwt(jwt).build();
     }
 }
