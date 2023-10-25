@@ -25,20 +25,20 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
+//    implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
     implementation 'org.springframework.boot:spring-boot-docker-compose'
-//    implementation "org.mybatis.spring.boot:mybatis-spring-boot-starter:$myBatisVersion"
-//    implementation "org.mybatis.spring.boot:mybatis-spring-boot-autoconfigure:$myBatisVersion"
-    implementation 'pro.chenggang:mybatis-r2dbc:1.2.5.RELEASE'
-    implementation 'pro.chenggang:mybatis-r2dbc-spring:1.2.5.RELEASE'
+    implementation "org.mybatis.spring.boot:mybatis-spring-boot-starter:$myBatisVersion"
+    implementation "org.mybatis.spring.boot:mybatis-spring-boot-autoconfigure:$myBatisVersion"
+//    implementation 'pro.chenggang:mybatis-r2dbc:1.2.5.RELEASE'
+//    implementation 'pro.chenggang:mybatis-r2dbc-spring:1.2.5.RELEASE'
     implementation "net.datafaker:datafaker:$dataFaker"
     implementation "org.projectlombok:lombok:$lombokVersion"
-//    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.2")
     implementation "org.slf4j:slf4j-ext:${slf4j}"
     implementation "io.jsonwebtoken:jjwt-api:$jwtVersion"
     implementation "io.jsonwebtoken:jjwt-impl:$jwtVersion"
     implementation "io.jsonwebtoken:jjwt-jackson:$jwtVersion"
-    implementation 'org.postgresql:r2dbc-postgresql'
+//    implementation 'org.postgresql:r2dbc-postgresql'
+    implementation 'org.postgresql:postgresql'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.projectreactor:reactor-test'

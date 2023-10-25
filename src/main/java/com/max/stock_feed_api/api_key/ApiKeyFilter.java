@@ -39,7 +39,7 @@ public class ApiKeyFilter extends OncePerRequestFilter {
         try {
             final var requestUsernameHeader = request.getHeader(USERNAME_HEADER_NAME);
             final var user = userRepository.findByUsername(requestUsernameHeader);
-            final var authentication = ApiKeyAuthenticationService.getAuthentication(user, request.getHeader(AUTH_TOKEN_HEADER_NAME));
+            final var authentication = ApiKeyAuthenticationService.getAuthentication(user.block(), request.getHeader(AUTH_TOKEN_HEADER_NAME));
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (Exception e) {
             log.warn("Try to access to protected recourses", e);

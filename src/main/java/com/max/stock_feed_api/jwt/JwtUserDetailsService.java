@@ -23,6 +23,6 @@ public class JwtUserDetailsService implements UserDetailsService {
         if (isNull(user)) {
             throw new UsernameNotFoundException(username);
         }
-        return new org.springframework.security.core.userdetails.User(username, user.getPassword(), List.of(new SimpleGrantedAuthority(user.getRole().name())));
+        return new org.springframework.security.core.userdetails.User(username, user.block().getPassword(), List.of(new SimpleGrantedAuthority(user.block().getRole().name())));
     }
 }
